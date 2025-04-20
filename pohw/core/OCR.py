@@ -39,23 +39,25 @@ class OCR(pohwConfig):
         self.CREDENTIAL = self.get_credential(ak, sk)
         if self.CREDENTIAL is None:
             raise BaseException('初始化认证信息有误！')
-        self.CLIENT = OcrClient.new_builder(OcrClient).\
-            with_credentials(self.CREDENTIAL).\
+        self.CLIENT = OcrClient.new_builder(). \
+            with_credentials(self.CREDENTIAL). \
             with_region(OcrRegion.CN_NORTH_4).build()
         if self.CLIENT is None:
             raise BaseException('初始话client有误！')
 
     def HouseholdRegister(self, file_base64=None, file_url=None):
         """
-            获取户口本的信息
+        发送户口本请求
+        :param file_base64: 文件base64编码
+        :param file_url: 在线文件url
         :return:
         """
         try:
             request = RecognizeHouseholdRegisterRequest()
             if file_base64 is not None:
                 request.body = HouseholdRegisterRequestBody(
-                            image=file_base64
-                        )
+                    image=file_base64
+                )
             else:
                 request.body = HouseholdRegisterRequestBody(
                     url=file_url
@@ -65,3 +67,46 @@ class OCR(pohwConfig):
             logger.error(f"request exception: {e}.")
             raise BaseException(e)
 
+    def SmartDocumentRecognizer(self, file_base64=None, file_url=None):
+        """
+        发送智能文档识别请求
+        :param file_base64: 文件base64编码
+        :param file_url: 在线文件url
+        :return:
+        """
+        try:
+            request = RecognizeSmartDocumentRecognizerRequest()
+            if file_base64 is not None:
+                request.body = SmartDocumentRecognizerRequestBody(
+                    data=file_base64
+                )
+            else:
+                request.body = SmartDocumentRecognizerRequestBody(
+                    url=file_url
+                )
+            return self.CLIENT.recognize_smart_document_recognizer(request)
+        except exceptions.ClientRequestException as e:
+            logger.error(f"request exception: {e}.")
+            raise BaseException(e)
+
+    def BankReceipt(self, file_base64=None, file_url=None):
+        """
+        发送智能文档识别请求
+        :param file_base64: 文件base64编码
+        :param file_url: 在线文件url
+        :return:
+        """
+        try:
+            request = RecognizeBankReceiptRequest()
+            if file_base64 is not None:
+                request.body = BankReceiptRequestBody(
+                    data=file_base64
+                )
+            else:
+                request.body = BankReceiptRequestBody(
+                    url=file_url
+                )
+            return self.CLIENT.recognize_bank_receipt(request)
+        except exceptions.ClientRequestException as e:
+            logger.error(f"request exception: {e}.")
+            raise BaseException(e)
