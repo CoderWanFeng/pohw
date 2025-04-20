@@ -28,5 +28,15 @@ class Ocr2Excel(unittest.TestCase):
     def test_BankReceipt2excel(self):
         BankReceipt2excel(input_path='../test_files/BankReceipt/img.png',
                           output_path='../test_files/BankReceipt',
-                          ak='HPUAF9VVGS4MXXSRA6GS',
-                          sk='zPRCzv4jRFcY29FPCwAPdGFX74xIOjDm2bbwMfDm')
+                          ak=self.CLOUD_SDK_AK,
+                          sk=self.CLOUD_SDK_SK)
+        self.assertTrue(os.path.exists('../test_files/BankReceipt/BankReceipt2excel.xlsx'))
+        os.remove('../test_files/BankReceipt/BankReceipt2excel.xlsx')
+        BankReceipt2excel(
+            file_url='https://mediabluk.cnr.cn/img/cnr/CNRCDP/2023/0915/71eda66458ed6169472706395670338310.jpg?'
+                     'auth=0be74649338d3fbae5029003e45d60f6',
+            output_path='../test_files/BankReceipt',
+            ak=self.CLOUD_SDK_AK,
+            sk=self.CLOUD_SDK_SK)
+        self.assertTrue(os.path.exists('../test_files/BankReceipt/BankReceipt2excel.xlsx'))
+        os.remove('../test_files/BankReceipt/BankReceipt2excel.xlsx')
